@@ -1,0 +1,25 @@
+# Secrets
+.env
+credentials.json
+
+# Python
+venv/
+expense_env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+*.log
+
+# Test files
+test_*.py
+check_models.py
+*_old.py
+*_backup.py
+
+# IDE
+.vscode/
+.idea/
