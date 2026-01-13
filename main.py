@@ -9,7 +9,6 @@ from telegram.ext import (
 from config import Config
 from gemini_parser import ExpenseParser
 from sheets_manager import SheetsManager
-import asyncio
 import logging
 
 logging.basicConfig(
@@ -32,7 +31,7 @@ You can add expenses in multiple ways:
 • "Spent 200 on pizza from Swiggy"
 • "Bought jeans for ₹1500 from Myntra"
 
-**Multiple expenses (NEW!):**
+**Multiple expenses:**
 • "Today I spent 300 for groceries and 200 for phone accessories and 100 for petrol"
 • "Paid 500 for lunch and 180 for Uber"
 
@@ -54,7 +53,7 @@ async def today_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         total = sheets.get_today_total()
         count = sheets.get_today_count()
         await update.message.reply_text(
-            f"💰 Today's Summary:\n\n"
+            f"�� Today's Summary:\n\n"
             f"Total: ₹{total:.2f}\n"
             f"Transactions: {count}"
         )
@@ -64,7 +63,6 @@ async def today_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Process expense messages - handles multiple expenses"""
     user_message = update.message.text
-    chat_id = update.message.chat_id
     
     processing_msg = await update.message.reply_text("⏳ Processing...")
     
@@ -113,10 +111,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await processing_msg.edit_text(response)
 
-async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Log errors"""
-    logger.error(f"Update {update} caused error {context.error}")
-
 def main():
     """Start the bot"""
     application = Application.builder().token(Config.TELEGRAM_TOKEN).build()
@@ -127,7 +121,6 @@ def main():
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
     )
-    application.add_error_handler(error_handler)
     
     logger.info("🚀 Bot started!")
     application.run_polling(allowed_updates=Update.ALL_TYPES)
