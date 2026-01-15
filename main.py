@@ -95,9 +95,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await processing_msg.edit_text(response)
 
-# HTTP Health Check Handler
 async def health_check(request):
-    return web.Response(text="Bot is running!")
+    return web.Response(text="OK")
 
 async def start_http_server():
     """Start HTTP server for Render health checks"""
@@ -108,7 +107,6 @@ async def start_http_server():
     runner = web.AppRunner(app)
     await runner.setup()
     
-    # Render expects port from PORT env variable
     import os
     port = int(os.getenv('PORT', 10000))
     
@@ -124,7 +122,6 @@ def main():
     application.add_handler(CommandHandler("today", today_command))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
-    # Start HTTP server in background
     loop = asyncio.get_event_loop()
     loop.create_task(start_http_server())
     
