@@ -65,11 +65,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
     processing_msg = await update.message.reply_text("⏳ Processing...")
     
-    # Get timestamp when user sent the message
+    # Get date when user sent the message
     ist = pytz.timezone('Asia/Kolkata')
     timestamp = update.message.date.astimezone(ist)
     date_str = timestamp.strftime("%d %b %Y")
-    time_str = timestamp.strftime("%I:%M %p")
     
     try:
         expenses_list = await parser.parse_expense(user_message)
@@ -87,13 +86,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if success_count == len(expenses_list):
             if len(expenses_list) == 1:
                 exp = expenses_list[0]
-                response = f"✅ Saved!\n\n💵 ₹{exp['amount']}\n📁 {exp['category']}\n🏷️ {exp['item']}\n🏪 {exp['vendor']}\n\n🕐 {date_str} at {time_str}"
+                response = f"✅ Saved!\n\n💵 ₹{exp['amount']}\n📁 {exp['category']}\n🏷️ {exp['item']}\n🏪 {exp['vendor']}\n\n📅 {date_str}"
             else:
                 response = f"✅ Saved {success_count} expenses!\n\n"
                 total = sum(exp['amount'] for exp in expenses_list)
                 for i, exp in enumerate(expenses_list, 1):
                     response += f"{i}. ₹{exp['amount']} - {exp['item']}\n"
-                response += f"\n💰 Total: ₹{total:.2f}\n�� {date_str} at {time_str}"
+                response += f"\n💰 Total: ₹{total:.2f}\n📅 {date_str}"
         else:
             response = f"⚠️ Saved {success_count}/{len(expenses_list)} expenses"
             
